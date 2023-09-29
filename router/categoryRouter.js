@@ -9,5 +9,6 @@ router.post("/addcategory",createCategory,upload.single('image'));
 router.get("/getall",getallcategory);
 router.delete('/:id',deletecategry);
 router.get('/:id',getaCategory);
+///
 
 module.exports = router;
