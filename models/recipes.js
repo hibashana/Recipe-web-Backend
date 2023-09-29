@@ -1,21 +1,24 @@
 
-const category = require('./category');
 const Category = require('./category');
+
 'use strict';
 const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
+ 
+ 
   class Recipes extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       // define association here
+      Recipes.belongsTo(models.Category, {
+        foreignKey: "ctgyid", //foreignKey added here
+      });
     }
   }
+
+  
+
   Recipes.init({
     rcpid: {
       type: DataTypes.UUID,
@@ -43,4 +46,3 @@ module.exports = (sequelize, DataTypes) => {
 
   return Recipes;
 };
-// Recipes.belongsTo(Category, { foreignKey: 'ctgyid' });
