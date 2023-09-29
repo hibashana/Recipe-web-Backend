@@ -6,7 +6,7 @@ module.exports = {
   development: {
     username: "postgres",
     password: "admin",
-    database: "app",
+    database: "recipesapp_db",
     host: "localhost",
     dialect: "postgres",
     port:5432,

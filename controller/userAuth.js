@@ -69,7 +69,11 @@ const createUser = asyncHandler(async (req, res) => {
 
   const getAllUser = asyncHandler(async (req, res) => {
     try {
-      const users = await Ruser.findAll();
+      const users = await Ruser.findAll({
+        where: {
+          type: 'user',
+        },
+      });
       res.status(200).json(users);
     } catch (error) {
       console.error(error);
@@ -152,6 +156,35 @@ const deleteUser = asyncHandler(async (req, res) => {
     }
   });
 
+  const loginAdmin = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+    try {
+      const  admin = await Ruser.findOne({ where: { email } });
+  
+      if (!admin) {
+        return res.status(401).json({ error: 'Authentication failed' });
+      }
+  
+      const isPasswordValid = await bcrypt.compare(password, admin.password);
+  
+      if (!isPasswordValid) {
+        // console.log(error)
+        return res.status(401).json({ error: 'Authentication failed' });
+      }
+  
+      const token = jwt.sign({ userId: admin.ruserid },JWT_SECRET, {
+        expiresIn: '1d',
+      });
+  
+      res.status(200).json({name:admin.name,email:admin.email,contact:admin.contact,username:admin.username,token:token});
+    //res.status(200).json({admin,token});
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while logging in' });
+    }
+  });
+
+
   const getalladmindetails= asyncHandler( async (req, res) => {
     try {
       const admins = await Ruser.findAll({
@@ -169,4 +202,4 @@ const deleteUser = asyncHandler(async (req, res) => {
   
 
   module.exports = {createUser,loginUser,getAllUser,getaUser,deleteUser,updateUserDetails,
-    updatePassword,getalladmindetails};
+    updatePassword,getalladmindetails,loginAdmin};

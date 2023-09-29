@@ -11,7 +11,9 @@ module.exports = {
         autoIncrement: false,
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
       },
       image: {
         type: Sequelize.STRING

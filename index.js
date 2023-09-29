@@ -18,7 +18,9 @@ const categoryRouter= require("./router/categoryRouter");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api/user",userAuthRouter);
+app.use('/public',express.static('public/images'));
 app.use("/api/category",categoryRouter);
+
 
 
 
