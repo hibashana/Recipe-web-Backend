@@ -2,20 +2,22 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('steps', {
-      stpid: {
+    await queryInterface.createTable('banners', {
+      id: {
         type: Sequelize.UUID,
         primaryKey: true,
         defaultValue: Sequelize.UUIDV4,
         allowNull: false,
         autoIncrement: false,
       },
-      description: {
+      name: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
       },
-      RecipeID:{
-        type:Sequelize.UUID,
+      image: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -28,6 +30,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('steps');
+    await queryInterface.dropTable('banners');
   }
 };

@@ -22,6 +22,9 @@ module.exports = {
       description: {
         type: Sequelize.STRING,
       },
+      CategoryID:{
+        type:Sequelize.UUID,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

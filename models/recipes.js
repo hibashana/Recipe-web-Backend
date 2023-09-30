@@ -1,23 +1,29 @@
 
-const Category = require('./category');
-
 'use strict';
 const {
   Model
 } = require('sequelize');
+ 
 module.exports = (sequelize, DataTypes) => {
  
  
   class Recipes extends Model {
     static associate(models) {
       // define association here
-      Recipes.belongsTo(models.Category, {
-        foreignKey: "ctgyid", //foreignKey added here
+      
+      // Recipes.belongsTo(models.Category, {
+      //   foreignKey: "ctgyid",  
+      // });
+      
+      Recipes.hasMany(models.Ingredients, {
+        foreignKey: 'RecipeID', // The fK in the Ingredients table
+      });
+      Recipes.hasMany(models.Steps, {
+        foreignKey: 'RecipeID', // The fK in the Steps table
       });
     }
   }
 
-  
 
   Recipes.init({
     rcpid: {
@@ -38,7 +44,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     description: {
       type:DataTypes.STRING,
-    }  
+    },
+    CategoryID:{
+      type:DataTypes.UUID,
+    },
   }, {
     sequelize,
     modelName: 'Recipes',

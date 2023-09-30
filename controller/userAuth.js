@@ -33,10 +33,10 @@ const createUser = asyncHandler(async (req, res) => {
 
       const hashedPassword = await bcrypt.hash(password, 10);
       const ruser = await Ruser.create({ name,email,contact,username,password:hashedPassword,type });
-      res.status(201).json({ message: 'User created successfully' });
+      res.status(201).json({ message: 'User created successfully' ,ruser});
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An error occurred while creating the user' });
+      res.status(500).json({ message: 'An error occurred while creating the user',error });
     }
   });
 

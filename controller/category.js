@@ -1,6 +1,6 @@
 const{Category}=require("../models");
-const bcrypt = require('bcrypt');
-const jwt = require("jsonwebtoken");
+const { Op } = require('sequelize');
+const path=require("path");
 // const { generateToken } = require("../config/jwtToken");
 const asyncHandler = require("express-async-handler");
 
@@ -19,11 +19,11 @@ const asyncHandler = require("express-async-handler");
 
 // const createCategory = asyncHandler(async (req, res) => {
 //   try {
-//     const { name, image, no_of_recipes } = req.body;
+//     const { name, image, no_of_Category } = req.body;
 
     
 
-//     const category = await Category.create({ name, image, no_of_recipes });
+//     const category = await Category.create({ name, image, no_of_Category });
 //     res.status(201).json(category);
     
 //   } catch (error) {
@@ -35,7 +35,7 @@ const asyncHandler = require("express-async-handler");
 
 const createCategory = async (req, res) => {
   try {
-    console.log(`name=${req.body.no_of_recipes}`);
+    console.log(`name=${req.body.no_of_Category}`);
     let category = await Category.findOne({
       where: {
         name: req.body.name,
@@ -49,7 +49,7 @@ const createCategory = async (req, res) => {
       category = await Category.create({
         name: req.body.name,
         image: imagePath,
-        no_of_recipes:req.body.no_of_recipes,
+        no_of_Category:req.body.no_of_Category,
       });
     } else {
       return res.status(200).json({ message: "Category exist" });
@@ -88,6 +88,33 @@ const createCategory = async (req, res) => {
     }
   });
 
+  const updateCategory = asyncHandler(async (req, res) => {
+    try {
+      const cid = req.params.id;
+      const category = await Category.findByPk(cid);
+      if (!category) {
+        return res.status(404).json({ error: 'Category not found' });
+      }
+      const uploadedFileName = req.file.filename;
+      console.log(uploadedFileName);
+      const imagePath = path.join("public/images/", uploadedFileName);
+     await category.update({
+        name: req.body.name,
+        image: imagePath,
+        no_of_Category:req.body.no_of_Category,
+      });
+      await category.save();
+
+      res.status(200).json(category);
+    } catch (error) {
+      console.log(error);
+
+      console.error(error);
+     
+      res.status(500).json({ error: 'An error occurred while updating the category' });
+    }
+  });
+
   const deletecategry = asyncHandler(async (req, res) => {
     try {
       const  categoryId= req.params.id
@@ -104,8 +131,26 @@ const createCategory = async (req, res) => {
   });
 
 
+  const searchCategory = asyncHandler(async (req, res) => {
+    try {
+      const { name } = req.body;
+      const category = await Category.findAll({
+        where: {
+          name: {
+            [Op.iLike]: `%${name}%`,
+          },
+        },
+      });
+  
+      res.status(200).json(category);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'An error occurred while searching for Category' });
+    }
+  });
+
   
   
 
 
-  module.exports = {createCategory,getaCategory,getallcategory,deletecategry};
+  module.exports = {createCategory,getaCategory,getallcategory,deletecategry,updateCategory,searchCategory};

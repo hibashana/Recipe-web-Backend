@@ -14,6 +14,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      RecipeID:{
+        type:Sequelize.UUID,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -9,8 +9,9 @@ const models = {
   Ruser: require('./ruser')(sequelize, Sequelize.DataTypes),
   Category:require('./category')(sequelize,Sequelize.DataTypes),
   Recipes:require('./recipes')(sequelize,Sequelize.DataTypes),
-  Intredients:require('./intredients')(sequelize,Sequelize.DataTypes),
+  Ingredients:require('./intredients')(sequelize,Sequelize.DataTypes),
   Steps:require('./steps')(sequelize,Sequelize.DataTypes),
+  Banner:require('./banner')(sequelize,Sequelize.DataTypes),
  // token: require('./token')(sequelize, Sequelize.DataTypes),
 };
 

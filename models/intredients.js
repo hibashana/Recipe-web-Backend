@@ -2,7 +2,7 @@
 const {
   Model
 } = require('sequelize');
-const recipes = require('./recipes');
+const Recipes = require('./recipes');
 module.exports = (sequelize, DataTypes) => {
   class intredients extends Model {
     /**
@@ -11,7 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      intredients.belongsTo(models.Recipes, {
+        foreignKey: 'RecipeID', // The foreign key in the Ingredients table
+      });
     }
   }
   intredients.init({
@@ -26,10 +28,12 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.STRING,
       allowNull: false,
     },
+    RecipeID:{
+      type:DataTypes.UUID,
+    },
   }, {
     sequelize,
     modelName: 'intredients',
   });
   return intredients;
 };
-// intredients.belongsTo(recipes, { foreignKey: 'rcpid' });
