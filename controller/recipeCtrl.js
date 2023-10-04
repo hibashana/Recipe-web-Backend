@@ -54,7 +54,8 @@ const { Op } = require('sequelize');
         try {
           const recpId = req.params.id;
           const recipe = await Recipes.findByPk(recpId,{
-            include: [{ model: Ingredients }, { model: Steps }],
+            include: [{ model: Ingredients,attributes: ['name_qnty'], },
+                      { model: Steps ,attributes: ['description'],}],
           });
           if (!recipe) {
             return res.status(404).json({ error: 'recipe not found' });

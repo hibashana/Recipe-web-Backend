@@ -45,6 +45,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 'user',
     },
+    isactive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
 
   }, {
     sequelize,

@@ -3,6 +3,7 @@ const { authMiddleware, isAdmin } = require('../middleware/authMiddleware');
 const { createRecipe, deleteRecipe, getallRecipes, updateRecipe, getaRecipe, searchRecipe } = require('../controller/recipeCtrl');
 const { upload } = require('../controller/uploadCtrl');
 
+
 const router = express.Router();
 
 router.post("/addrecipe",authMiddleware,isAdmin,upload.single('image'),createRecipe);

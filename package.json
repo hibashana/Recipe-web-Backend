@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "server":"nodemon index"
+    "server": "nodemon index"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +23,9 @@
     "express-async-handler": "^1.2.0",
     "fs": "^0.0.1-security",
     "hbs": "^4.2.0",
+    "http-error": "^0.0.6",
+    "http-status": "^1.7.0",
+    "joi": "^17.10.2",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.0.1",

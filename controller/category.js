@@ -133,11 +133,11 @@ const createCategory = async (req, res) => {
 
   const searchCategory = asyncHandler(async (req, res) => {
     try {
-      const { name } = req.body;
+      const {item} = req.query;
       const category = await Category.findAll({
         where: {
           name: {
-            [Op.iLike]: `%${name}%`,
+            [Op.iLike]: `%${item}%`,
           },
         },
       });

@@ -3,6 +3,7 @@ const { createCategory, getaCategory, getallcategory, deletecategry, updateCateg
 const { upload } = require('../controller/uploadCtrl');
 const { authMiddleware, isAdmin } = require('../middleware/authMiddleware');
 
+
 const router = express.Router();
 
 

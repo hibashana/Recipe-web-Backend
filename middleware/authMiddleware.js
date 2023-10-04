@@ -52,7 +52,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
 
   const isAdmin = asyncHandler(async (req, res, next) => {
-    const { email } = req.user;
+    const { email} = req.user;
     const adminUser = await Ruser.findOne({where:{email:email}  });
     if (adminUser.type !== "admin") {
       throw new Error("You are not admin");

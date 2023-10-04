@@ -2,6 +2,7 @@ const express = require('express');
 const { authMiddleware, isAdmin } = require('../middleware/authMiddleware');
 const { createIngredients, getaIngredient, getallIngredients, deleteIngredient, updateIngredients } = require('../controller/ingredientsCtrl');
 
+
 const router = express.Router();
 
 
