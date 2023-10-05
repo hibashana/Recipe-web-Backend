@@ -2,6 +2,7 @@ const{Recipes,Ingredients,Steps}=require("../models");
 const asyncHandler = require("express-async-handler");
 const path=require("path");
 const { Op } = require('sequelize');
+const httpStatus = require("http-status");
 
 
 
@@ -13,29 +14,27 @@ const { Op } = require('sequelize');
               name: req.body.name,
             },
           });
+          if (!req.file) {
+            return res.status(httpStatus.BAD_REQUEST).json({ error: 'No file uploaded' });
+          }
       
           if (!recipes) {
             const uploadedFileName = req.file.filename;
             console.log(`uploadedFileName=${uploadedFileName}`);
             const imagePath = path.join("public/images/", uploadedFileName);
             
-            // recipes = await Recipes.create({
-            //   name: req.body.name,
-            //   image: imagePath,
-            //   description:req.body.description,
-            //   CategoryID:req.body.CategoryID
-              
-            // });
             req.body.image=imagePath;
             recipes = await Recipes.create(req.body
               );
+              res.status(httpStatus.OK).send(`Recipe ${recipes.name} created successfully.`);
           } else {
-            return res.status(200).json({ message: "Recipe exist" });
+            return res.status(httpStatus.BAD_REQUEST).send("Recipe exist");
+            
           }
           return res.status(200).json(recipes);
         } catch (error) {
-          console.error("Error creating recipe:", error);
-          return res.status(500).json({ error: "Server error" });
+          console.error(error);
+          return res.status(httpStatus.BAD_REQUEST).send(error.message);
         }
       });
 

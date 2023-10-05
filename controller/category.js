@@ -1,8 +1,8 @@
 const{Category}=require("../models");
 const { Op } = require('sequelize');
 const path=require("path");
-// const { generateToken } = require("../config/jwtToken");
 const asyncHandler = require("express-async-handler");
+const httpStatus = require("http-status");
 
 
 // const categoryExists = asyncHandler(async (req, res) => {
@@ -41,6 +41,9 @@ const createCategory = async (req, res) => {
         name: req.body.name,
       },
     });
+    // if (!req.file) {
+    //   return res.status(httpStatus.BAD_REQUEST).json({ error: 'No file uploaded' });
+    // }
 
     if (!category) {
       const uploadedFileName = req.file.filename;
@@ -52,12 +55,13 @@ const createCategory = async (req, res) => {
         no_of_Category:req.body.no_of_Category,
       });
     } else {
-      return res.status(200).json({ message: "Category exist" });
+      return res.status(httpStatus.BAD_REQUEST).json({ message: 'Category exist' });
     }
-    return res.status(200).json(category);
+    // return res.status(httpStatus.OK).send(`Categories ${category.name} created successfully.`);
+    return res.status(httpStatus.OK).json(category);
   } catch (error) {
     console.error("Error creating category:", error);
-    return res.status(500).json({ error: "Server error" });
+    return res.status(httpStatus.BAD_REQUEST).send(error.message);
   }
 };
 
@@ -68,23 +72,23 @@ const createCategory = async (req, res) => {
       const category = await Category.findByPk(categoryId);
   
       if (!category) {
-        return res.status(404).json({ error: 'Category not found' });
+        return res.status(httpStatus.BAD_REQUEST).json({ message: 'Category not found' });
       }
   
       res.json(category);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An error occurred while fetching the category' });
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
     }
   });
 
   const getallcategory = asyncHandler(async (req, res) => {
     try {
       const category = await Category.findAll();
-      res.status(200).json(category);
+      res.status(httpStatus.OK).json(category);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An error occurred while fetching ' });
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
     }
   });
 
@@ -93,8 +97,9 @@ const createCategory = async (req, res) => {
       const cid = req.params.id;
       const category = await Category.findByPk(cid);
       if (!category) {
-        return res.status(404).json({ error: 'Category not found' });
+        return res.status(httpStatus.BAD_REQUEST).json({ error: 'Category not found' });
       }
+      
       const uploadedFileName = req.file.filename;
       console.log(uploadedFileName);
       const imagePath = path.join("public/images/", uploadedFileName);
@@ -105,13 +110,13 @@ const createCategory = async (req, res) => {
       });
       await category.save();
 
-      res.status(200).json(category);
+      res.status(httpStatus.OK).json(category);
     } catch (error) {
       console.log(error);
 
       console.error(error);
      
-      res.status(500).json({ error: 'An error occurred while updating the category' });
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
     }
   });
 

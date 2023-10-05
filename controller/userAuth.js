@@ -20,20 +20,27 @@ const createUser = asyncHandler(async (req, res) => {
     });
 
 
-    const loginUser = async (req, res) => {
-
-      const { username, password } = req.body; //username and password required in body
-         const user = await Ruser.findOne({ where: { username } });     
-      const passwordMatch = await bcrypt.compare(password, user.password);
-            const token = jwt.sign({ userId: user.ruserid }, JWT_SECRET, {
-        expiresIn: "1d",
-      });
-      res.status(200).json({ token: token, user: user });
-    };
-
+    const loginUser = asyncHandler(async (req, res) => {
+      const { username, password } = req.body;
+        const user = await Ruser.findOne({ where: { username } });
+    
+        if (!user) {
+          return res.status(httpStatus.BAD_REQUEST).send("Incorrect username");
+        }
+    
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+    
+        if (!isPasswordValid) {
+          return res.status(httpStatus.BAD_REQUEST).send("Incorrect password");
+        }
+    
+        const token = jwt.sign({ userId: user.ruserid },JWT_SECRET, {
+          expiresIn: '1d',
+        });
+    
+        res.status(200).json({name:user.name,email:user.email,contact:user.contact,username:user.username,token:token});
+    });
   
-
-
 
   const getAllUser = asyncHandler(async (req, res) => {
     try {
@@ -71,7 +78,7 @@ const deleteUser = asyncHandler(async (req, res) => {
         return res.status(httpStatus.BAD_REQUEST).send("User not found"); 
       }
       await user.destroy();
-      res.status(204).json();
+      return res.status(httpStatus.OK).send("Deleted successfully"); 
     } catch (error) {
       console.error(error);
       return res.status(httpStatus.BAD_REQUEST).send("An error occurred while deleting the user"); 
@@ -91,7 +98,8 @@ const deleteUser = asyncHandler(async (req, res) => {
       res.status(200).json(user);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An error occurred while updating the user' });
+      return res.status(httpStatus.BAD_REQUEST).send("An error occurred while updating the user"); 
+      
     }
   });
 
@@ -101,7 +109,6 @@ const deleteUser = asyncHandler(async (req, res) => {
     const { ruserid } = req.user;
     const { password } = req.body;
     console.log(ruserid);
-   try {
       const user = await Ruser.findOne({where:{ruserid:ruserid}});
       if (!user) {
         return res.status(httpStatus.BAD_REQUEST).send("User not found"); 
@@ -114,14 +121,10 @@ const deleteUser = asyncHandler(async (req, res) => {
   
         await user.save();
   
-        res.status(200).json({ message: 'Password updated successfully' });
-      } else {
-        res.status(400).json({ error: 'New password is required' });
+        return res.status(httpStatus.OK).send("Password updated successfully"); 
       }
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'An error occurred' });
-    }
+      return res.status(httpStatus.BAD_REQUEST).send("An error occurred while update the password"); 
+    
   });
 
   const loginAdmin = asyncHandler(async (req, res) => {
@@ -130,14 +133,13 @@ const deleteUser = asyncHandler(async (req, res) => {
       const  admin = await Ruser.findOne({ where: { username } });
   
       if (!admin) {
-        return res.status(401).json({ error: 'Authentication failed' });
+        return res.status(httpStatus.BAD_REQUEST).send("username is not correct");
       }
   
       const isPasswordValid = await bcrypt.compare(password, admin.password);
   
       if (!isPasswordValid) {
-        // console.log(error)
-        return res.status(401).json({ error: 'Authentication failed' });
+        return res.status(httpStatus.BAD_REQUEST).send("Wrong password");
       }
   
       const token = jwt.sign({ userId: admin.ruserid },JWT_SECRET, {
@@ -148,24 +150,10 @@ const deleteUser = asyncHandler(async (req, res) => {
     //res.status(200).json({admin,token});
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An error occurred while logging in' });
+      return res.status(httpStatus.BAD_REQUEST).send("An error occurred while logging in");
     }
   });
 
-
-  const getalladmindetails= asyncHandler( async (req, res) => {
-    try {
-      const admins = await Ruser.findAll({
-        where: {
-          type: 'admin',
-        },
-      });
-      res.json(admins);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'An error occurred while fetching admin details' });
-    }
-  });
 
   const changeDefaultvalue= asyncHandler( async (req, res) => {
   try {
@@ -190,4 +178,4 @@ const deleteUser = asyncHandler(async (req, res) => {
     
 
   module.exports = {createUser,loginUser,getAllUser,getaUser,deleteUser,updateUserDetails,
-    updatePassword,getalladmindetails,loginAdmin,changeDefaultvalue};
+    updatePassword,loginAdmin,changeDefaultvalue};

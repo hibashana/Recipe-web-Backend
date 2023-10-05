@@ -9,16 +9,15 @@ const router = express.Router();
 
 router.post("/register",validate(uservalidation.createUser),createUser);
 router.post("/login",validate(uservalidation.loginUser ),loginUser);
-router.post("/admin-login",loginAdmin);
+router.post("/admin-login",validate(uservalidation.loginAdmin),loginAdmin);
 
-router.get("/alluser",authMiddleware,isAdmin,getAllUser);
-router.get("/detailsofadmin",getalladmindetails);
-router.get("/:id",getaUser);
-
+router.get("/alluser",authMiddleware,isAdmin,validate(uservalidation.getAllUser),getAllUser);
+router.get("/:id",validate(uservalidation.getaUser),getaUser);
 
 
-router.put("/updatePassword",authMiddleware,updatePassword);
-router.put("/:id",updateUserDetails);
+
+router.put("/updatePassword",authMiddleware,validate(uservalidation.updatePassword),updatePassword);
+router.put("/:id",validate(uservalidation.updateUserDetails),updateUserDetails);
 
 router.put("/change_value/:id",authMiddleware,isAdmin,changeDefaultvalue);
 
