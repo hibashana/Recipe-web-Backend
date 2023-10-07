@@ -35,7 +35,7 @@ const createUser = asyncHandler(async (req, res) => {
         }
     
         const token = jwt.sign({ userId: user.ruserid },JWT_SECRET, {
-          expiresIn: '1d',
+          expiresIn: '24h',
         });
     
         res.status(200).json({name:user.name,email:user.email,contact:user.contact,username:user.username,token:token});
@@ -81,7 +81,7 @@ const deleteUser = asyncHandler(async (req, res) => {
       return res.status(httpStatus.OK).send("Deleted successfully"); 
     } catch (error) {
       console.error(error);
-      return res.status(httpStatus.BAD_REQUEST).send("An error occurred while deleting the user"); 
+      return res.status(httpStatus.BAD_REQUEST).send(error.message); 
     }
   });
 
@@ -143,7 +143,7 @@ const deleteUser = asyncHandler(async (req, res) => {
       }
   
       const token = jwt.sign({ userId: admin.ruserid },JWT_SECRET, {
-        expiresIn: '1d',
+        expiresIn: '24h',
       });
   
       res.status(200).json({name:admin.name,email:admin.email,contact:admin.contact,username:admin.username,token:token});

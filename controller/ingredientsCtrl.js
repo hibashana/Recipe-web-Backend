@@ -1,15 +1,16 @@
 const{Ingredients}=require("../models");
 const asyncHandler = require("express-async-handler");
+const httpStatus = require("http-status");
 
 
 const createIngredients = asyncHandler(async (req, res) => {
   try {
     const { name_qnty, RecipeID } = req.body;
     const ingredients = await Ingredients.create({ name_qnty, RecipeID });
-    res.status(201).json(ingredients);
+    return res.status(httpStatus.OK).json(ingredients);
   } catch (error) {
     console.error(error);
-    res.status(500).json(error);
+    return res.status(httpStatus.BAD_REQUEST).send(error.message);
   }
 });
 
@@ -19,22 +20,23 @@ const createIngredients = asyncHandler(async (req, res) => {
       const ingrntId = req.params.id;
       const ingredients = await Ingredients.findByPk(ingrntId);
       if (!ingredients) {
-        return res.status(404).json({ error: 'Ingredient not found' });
+        return res.status(httpStatus.BAD_REQUEST).json({ error: 'Ingredient not found' });
       }
-      res.status(200).json(ingredients);
+      res.status(httpStatus.OK).json(ingredients);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An error occurred while fetching the Ingredient' });
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
     }
   });
 
   const getallIngredients = asyncHandler(async (req, res) => {
     try {
       const ingredients = await Ingredients.findAll();
-      res.status(200).json(ingredients);
+      res.status(httpStatus.OK).json(ingredients);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An error occurred while fetching ' });
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
+      // res.status(500).json({ error: 'An error occurred while fetching ' });
     }
   });
   
@@ -44,13 +46,14 @@ const createIngredients = asyncHandler(async (req, res) => {
       const  ingrntId= req.params.id
       const ingredients = await Ingredients.findByPk(ingrntId);
       if (!ingredients) {
-        return res.status(404).json({ error: 'ingredients not found' });
+        return res.status(httpStatus.BAD_REQUEST).json({ error: 'ingredients not found' });
       }
       await ingredients.destroy();
-      res.status(204).json();
+      return res.status(httpStatus.OK).json('Deleted successfully');
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An error occurred while deleting the ingredients' });
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
+      // res.status(500).json({ error: 'An error occurred while deleting the ingredients' });
     }
   });
 
@@ -60,15 +63,16 @@ const createIngredients = asyncHandler(async (req, res) => {
       const ingrntId = req.params.id;
       const ingredients = await Ingredients.findByPk(ingrntId);
       if (!ingredients) {
-        return res.status(404).json({ error: 'Ingredient not found' });
+        return res.status(httpStatus.BAD_REQUEST).json({ error: 'Ingredient not found' });
       }
       
       await ingredients.update(req.body);
   
-      res.status(200).json(ingredients);
+      res.status(httpStatus.OK).json(ingredients);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An error occurred while updating the ingredient' });
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
+      // res.status(500).json({ error: 'An error occurred while updating the ingredient' });
     }
   });
  

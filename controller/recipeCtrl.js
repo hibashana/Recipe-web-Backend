@@ -14,9 +14,9 @@ const httpStatus = require("http-status");
               name: req.body.name,
             },
           });
-          if (!req.file) {
-            return res.status(httpStatus.BAD_REQUEST).json({ error: 'No file uploaded' });
-          }
+          // if (!req.file) {
+          //   return res.status(httpStatus.BAD_REQUEST).json({ error: 'No file uploaded' });
+          // }
       
           if (!recipes) {
             const uploadedFileName = req.file.filename;
@@ -41,10 +41,10 @@ const httpStatus = require("http-status");
       const getallRecipes = asyncHandler(async (req, res) => {
         try {
           const recipe = await Recipes.findAll();
-          res.status(200).json(recipe);
+          res.status(httpStatus.OK).json(recipe);
         } catch (error) {
           console.error(error);
-          res.status(500).json({ error: 'An error occurred while fetching ' });
+          return res.status(httpStatus.BAD_REQUEST).send(error.message);
         }
       });
 
@@ -57,12 +57,12 @@ const httpStatus = require("http-status");
                       { model: Steps ,attributes: ['description'],}],
           });
           if (!recipe) {
-            return res.status(404).json({ error: 'recipe not found' });
+            return res.status(httpStatus.BAD_REQUEST).json({ error: 'recipe not found' });
           }
-          res.status(200).json(recipe);
+          res.status(httpStatus.OK).json(recipe);
         } catch (error) {
           console.error(error);
-          res.status(500).json({ error: 'An error occurred while fetching the recipe' });
+          res.status(httpStatus.BAD_REQUEST).json({ error: 'An error occurred while fetching the recipe' });
         }
       });
 
@@ -71,7 +71,7 @@ const httpStatus = require("http-status");
           const RecipeID = req.params.id;
           const recipe= await Recipes.findByPk(RecipeID);
           if (!recipe) {
-            return res.status(404).json({ error: 'Recipe not found' });
+            return res.status(httpStatus.BAD_REQUEST).json({ error: 'Recipe not found' });
           }
           const uploadedFileName = req.file.filename;
           console.log(uploadedFileName);
@@ -83,13 +83,11 @@ const httpStatus = require("http-status");
           });
           await recipe.save();
     
-          res.status(200).json(recipe);
+          res.status(httpStatus.OK).json(recipe);
         } catch (error) {
-          console.log(error);
-    
           console.error(error);
          
-          res.status(500).json({ error: 'An error occurred while updating the recipe' });
+          res.status(httpStatus.BAD_REQUEST).json({ error: 'An error occurred while updating the recipe' });
         }
       });
 
@@ -99,13 +97,13 @@ const httpStatus = require("http-status");
           const  recpId= req.params.id
           const recipe = await Recipes.findByPk(recpId);
           if (!recipe) {
-            return res.status(404).json({ error: 'Recipe not found' });
+            return res.status(httpStatus.BAD_REQUEST).json({ error: 'Recipe not found' });
           }
           await recipe.destroy();
-          res.status(204).json();
+          res.status(httpStatus.OK).json('Recipe deleted');
         } catch (error) {
           console.error(error);
-          res.status(500).json({ error: 'An error occurred while deleting the recipe' });
+          res.status(httpStatus.BAD_REQUEST).json({ error: 'An error occurred while deleting the recipe' });
         }
       });
 
@@ -121,10 +119,10 @@ const httpStatus = require("http-status");
       },
     });
 
-    res.status(200).json(recipes);
+    res.status(httpStatus.OK).json(recipes);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'An error occurred while searching for recipes' });
+    res.status(httpStatus.BAD_REQUEST).json({ error: 'An error occurred while searching for recipes' });
   }
 });
       

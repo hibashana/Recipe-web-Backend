@@ -13,12 +13,10 @@ const createUser = {
   }),
 };
 
-const loginUser = {
-  body: Joi.object().keys({
+const loginUser =  Joi.object().keys({
     username: Joi.string().alphanum().required(),
     password: Joi.string().required().custom(password),
-  }),
-};
+  });
 
 const updatePassword = {
   body: Joi.object().keys({
@@ -27,12 +25,10 @@ const updatePassword = {
   }),
 };
 
-const loginAdmin = {
-  body: Joi.object().keys({
+const loginAdmin = Joi.object().keys({
     username: Joi.string().alphanum().required(),
     password: Joi.string().required().custom(password),
-  }),
-};
+  });
 
 const getAllUser = Joi.object({
   name: Joi.string(),
@@ -61,13 +57,13 @@ const updateUserDetails = {
       .min(1),
 };
 
-const deleteUser = Joi.object({
-  params: Joi.object({
-    ruserid: Joi.string().required(),
-  }),
-});
+// const deleteUser = Joi.object({
+//   params: Joi.object({
+//     ruserid: Joi.string().required(),
+//   }),
+// });
 
   
 
 
-module.exports={createUser,updatePassword,loginUser,loginAdmin,getAllUser,getaUser,updateUserDetails ,deleteUser}
+module.exports={createUser,updatePassword,loginUser,loginAdmin,getAllUser,getaUser,updateUserDetails}

@@ -125,13 +125,13 @@ const createCategory = async (req, res) => {
       const  categoryId= req.params.id
       const category = await Category.findByPk(categoryId);
       if (!category) {
-        return res.status(404).json({ error: 'category not found' });
+        return res.status(httpStatus.BAD_REQUEST).json({ error: 'Category not found' });
       }
       await category.destroy();
-      res.status(204).json();
+      res.status(httpStatus.OK).json('Deleted Successfully');
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An error occurred while deleting the category' });
+      res.status(httpStatus.BAD_REQUEST).json(error.message);
     }
   });
 
@@ -147,10 +147,10 @@ const createCategory = async (req, res) => {
         },
       });
   
-      res.status(200).json(category);
+      res.status(httpStatus.OK).json(category);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An error occurred while searching for Category' });
+      res.status(httpStatus.BAD_REQUEST).json({ error: 'An error occurred while searching for Category' });
     }
   });
 

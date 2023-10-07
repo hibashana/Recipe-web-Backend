@@ -1,13 +1,13 @@
 const Joi = require('joi');
 
-const createRecipe = {
-    body: Joi.object().keys({
-        name: Joi.string().required(),
-        description: Joi.string().required(),
-        CategoryID:Joi.string().required(),
-        // image: Joi.string().required(),
-    }),
-  };
+const createRecipe= Joi.object().keys({
+  name: Joi.string().required(),
+  description: Joi.string().empty(''),
+  CategoryID:Joi.string().required(),
+  image: Joi.string().required(),
+
+});
+
   
   const getaRecipe = Joi.object({
     params: Joi.object({
@@ -15,4 +15,14 @@ const createRecipe = {
     }),
   });
 
-  module.exports={createRecipe,getaRecipe}
+  const updateRecipe= Joi.object().keys({
+    name: Joi.string(),
+    description: Joi.string().empty(''),
+    // CategoryID:Joi.string().required(),
+    image: Joi.string(),
+  
+  });
+
+
+
+  module.exports={createRecipe,getaRecipe,updateRecipe}

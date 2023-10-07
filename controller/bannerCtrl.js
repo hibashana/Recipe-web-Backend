@@ -1,6 +1,7 @@
 const{Banner}=require("../models");
 const path=require("path");
 const asyncHandler = require("express-async-handler");
+const httpStatus = require("http-status");
 
 const createBanner = async (req, res) => {
     try {
@@ -20,12 +21,12 @@ const createBanner = async (req, res) => {
           image: imagePath,
         });
       } else {
-        return res.status(200).json({ message: "Banner exist" });
+        return res.status(httpStatus.BAD_REQUEST).json({ message: "Banner exist"});
       }
-      return res.status(200).json(banner);
+      return res.status(httpStatus.OK).json(banner);
     } catch (error) {
-      console.error("Error creating banner:", error);
-      return res.status(500).json({ error: "Server error" });
+      // console.error("Error creating banner:", error);
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
     }
   };
 
@@ -34,12 +35,12 @@ const createBanner = async (req, res) => {
       const bannerId = req.params.id;
       const banner = await Banner.findByPk(bannerId);
       if (!banner) {
-        return res.status(404).json({ error: 'Banner not found' });
+        return res.status(httpStatus.BAD_REQUEST).json({ error: 'Banner not found' });
       }
-      res.status(200).json(banner);
+      res.status(httpStatus.OK).json(banner);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An error occurred while fetching the banner' });
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
     }
   });
   
@@ -47,10 +48,10 @@ const createBanner = async (req, res) => {
   const getallBanner = asyncHandler(async (req, res) => {
     try {
       const banner = await Banner.findAll();
-      res.status(200).json(banner);
+      res.status(httpStatus.OK).json(banner);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An error occurred while fetching ' });
+      res.status(httpStatus.BAD_REQUEST).json({ error: 'An error occurred while fetching ' });
     }
   });
 
@@ -59,7 +60,7 @@ const createBanner = async (req, res) => {
       const bannerId = req.params.id;
       const banner= await Banner.findByPk(bannerId);
       if (!banner) {
-        return res.status(404).json({ error: 'Banner not found' });
+        return res.status(httpStatus.BAD_REQUEST).json({ error: 'Banner not found' });
       }
       const uploadedFileName = req.file.filename;
       console.log(uploadedFileName);
@@ -70,13 +71,11 @@ const createBanner = async (req, res) => {
       });
       await banner.save();
 
-      res.status(200).json(banner);
-    } catch (error) {
-      console.log(error);
-
+      res.status(httpStatus.OK).json(banner);
+    } catch (error) {  
       console.error(error);
      
-      res.status(500).json({ error: 'An error occurred while updating the banner' });
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
     }
   });
 
@@ -88,10 +87,10 @@ const createBanner = async (req, res) => {
         return res.status(404).json({ error: 'Banner not found' });
       }
       await banner.destroy();
-      res.status(204).json();
+      res.status(httpStatus.OK).json("Banner deleted Successfully");
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: 'An error occurred while deleting the banner' });
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
     }
   });
 
