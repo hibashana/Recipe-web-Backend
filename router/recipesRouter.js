@@ -37,6 +37,7 @@ router.put('/updaterecipe/:id',authMiddleware,isAdmin,upload.single('image'),(re
       name: req.body.name,
       image: req.file ? req.file.filename : "", // Convert the buffer to base64
     //   CategoryID:req.body.CategoryID
+    
     };
 
     const { error } = recipevalidation.updateRecipe.validate(formData);

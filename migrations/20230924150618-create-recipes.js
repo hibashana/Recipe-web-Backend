@@ -22,6 +22,10 @@ module.exports = {
       description: {
         type: Sequelize.STRING,
       },
+      premium: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+      },
       CategoryID:{
         type:Sequelize.UUID,
       },

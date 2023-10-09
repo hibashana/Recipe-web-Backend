@@ -88,11 +88,13 @@ const deleteUser = asyncHandler(async (req, res) => {
   const updateUserDetails = asyncHandler(async (req, res) => {
     try {
       const userId = req.params.id;
+      if (!userId) {
+        return res.status(httpStatus.BAD_REQUEST).json({ error: 'ID is required' });
+      }
       const user = await Ruser.findByPk(userId);
       if (!user) {
         return res.status(httpStatus.BAD_REQUEST).send("User not found"); 
       }
-      
       await user.update(req.body);
   
       res.status(200).json(user);
@@ -133,29 +135,30 @@ const deleteUser = asyncHandler(async (req, res) => {
       const  admin = await Ruser.findOne({ where: { username } });
   
       if (!admin) {
-        return res.status(httpStatus.BAD_REQUEST).send("username is not correct");
+        return res.status(httpStatus.BAD_REQUEST).json({ error: 'Incorrect username' });
       }
   
       const isPasswordValid = await bcrypt.compare(password, admin.password);
   
       if (!isPasswordValid) {
-        return res.status(httpStatus.BAD_REQUEST).send("Wrong password");
+        // console.log(error)
+        return res.status(httpStatus.BAD_REQUEST).json({ error: 'incorrect password' });
       }
   
       const token = jwt.sign({ userId: admin.ruserid },JWT_SECRET, {
-        expiresIn: '24h',
+        expiresIn: '1d',
       });
   
       res.status(200).json({name:admin.name,email:admin.email,contact:admin.contact,username:admin.username,token:token});
     //res.status(200).json({admin,token});
     } catch (error) {
       console.error(error);
-      return res.status(httpStatus.BAD_REQUEST).send("An error occurred while logging in");
+      res.status(httpStatus.BAD_REQUEST).json(error.message);
     }
   });
 
 
-  const changeDefaultvalue= asyncHandler( async (req, res) => {
+  const updateisActive= asyncHandler( async (req, res) => {
   try {
     const  userId = req.params.id;
     console.log(userId);
@@ -178,4 +181,4 @@ const deleteUser = asyncHandler(async (req, res) => {
     
 
   module.exports = {createUser,loginUser,getAllUser,getaUser,deleteUser,updateUserDetails,
-    updatePassword,loginAdmin,changeDefaultvalue};
+    updatePassword,loginAdmin,updateisActive};

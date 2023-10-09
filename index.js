@@ -35,6 +35,9 @@ app.use("/api/recipes",recipesRouter);
 app.use("/api/banner",bannerRouter);
 app.use("/api/ingredients",ingredientRouter);
 app.use("/api/steps",stepsRouter);
+app.get('*', (req, res) => {
+  res.status(404).send('Sorry, the page you are looking for does not exist.');
+});
 
 
 

@@ -109,22 +109,23 @@ const httpStatus = require("http-status");
 
 
   const searchRecipe = asyncHandler(async (req, res) => {
-  try {
-    const { name } = req.body;
-    const recipes = await Recipes.findAll({
-      where: {
-        name: {
-          [Op.iLike]: `%${name}%`, // Case-insensitive search for recipe names containing the given text
-        },
-      },
+      try {
+        const {item} = req.query;
+        const recipe = await Recipes.findAll({
+          where: {
+            name: {
+              [Op.iLike]: `%${item}%`,
+            },
+          },
+        });
+    
+        res.status(httpStatus.OK).json(recipe);
+      } catch (error) {
+        console.error(error);
+        res.status(httpStatus.BAD_REQUEST).json({ error: 'An error occurred while searching for recipe' });
+      }
     });
-
-    res.status(httpStatus.OK).json(recipes);
-  } catch (error) {
-    console.error(error);
-    res.status(httpStatus.BAD_REQUEST).json({ error: 'An error occurred while searching for recipes' });
-  }
-});
+  
       
 
  module.exports={createRecipe,getallRecipes,deleteRecipe,updateRecipe,getaRecipe,searchRecipe};

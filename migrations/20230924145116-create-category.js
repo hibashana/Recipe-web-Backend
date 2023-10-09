@@ -18,9 +18,6 @@ module.exports = {
       image: {
         type: Sequelize.STRING
       },
-      no_of_recipes: {
-        type: Sequelize.INTEGER
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

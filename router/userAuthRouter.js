@@ -1,5 +1,5 @@
 const express = require('express');
-const { createUser, loginUser, getAllUser, getaUser, updateUserDetails, deleteUser, updatePassword, getalladmindetails, loginAdmin,changeDefaultvalue,} = require('../controller/userAuth');
+const { createUser, loginUser, getAllUser, getaUser, updateUserDetails, deleteUser, updatePassword, loginAdmin,updateisActive,} = require('../controller/userAuth');
 const { authMiddleware, isAdmin } = require('../middleware/authMiddleware');
 const validate  = require('../middleware/validation');
 const uservalidation  = require('../validation/user-Validation');
@@ -14,12 +14,10 @@ router.post("/admin-login",validate(uservalidation.loginAdmin),loginAdmin);
 router.get("/alluser",authMiddleware,isAdmin,validate(uservalidation.getAllUser),getAllUser);
 router.get("/:id",validate(uservalidation.getaUser),getaUser);
 
-
-
 router.put("/updatePassword",authMiddleware,validate(uservalidation.updatePassword),updatePassword);
 router.put("/:id",validate(uservalidation.updateUserDetails),updateUserDetails);
 
-router.put("/change_value/:id",authMiddleware,isAdmin,changeDefaultvalue);
+router.put("/changeisActive/:id",authMiddleware,isAdmin,updateisActive);
 
 
 

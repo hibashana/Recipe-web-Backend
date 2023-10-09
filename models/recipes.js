@@ -45,6 +45,10 @@ module.exports = (sequelize, DataTypes) => {
     description: {
       type:DataTypes.STRING,
     },
+    premium: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     CategoryID:{
       type:DataTypes.UUID,
     },

@@ -3,6 +3,8 @@ const { Op } = require('sequelize');
 const path=require("path");
 const asyncHandler = require("express-async-handler");
 const httpStatus = require("http-status");
+const validate =require('../middleware/validation');
+const categoryvalidation= require('../validation/category-validation');
 
 
 // const categoryExists = asyncHandler(async (req, res) => {
@@ -35,16 +37,15 @@ const httpStatus = require("http-status");
 
 const createCategory = async (req, res) => {
   try {
+    
     console.log(`name=${req.body.no_of_Category}`);
-    let category = await Category.findOne({
+    
+    let  category = await Category.findOne({
       where: {
         name: req.body.name,
       },
     });
-    // if (!req.file) {
-    //   return res.status(httpStatus.BAD_REQUEST).json({ error: 'No file uploaded' });
-    // }
-
+   
     if (!category) {
       const uploadedFileName = req.file.filename;
       console.log(uploadedFileName);
@@ -52,7 +53,7 @@ const createCategory = async (req, res) => {
       category = await Category.create({
         name: req.body.name,
         image: imagePath,
-        no_of_Category:req.body.no_of_Category,
+        // no_of_Category:req.body.no_of_Category,
       });
     } else {
       return res.status(httpStatus.BAD_REQUEST).json({ message: 'Category exist' });
@@ -60,7 +61,7 @@ const createCategory = async (req, res) => {
     // return res.status(httpStatus.OK).send(`Categories ${category.name} created successfully.`);
     return res.status(httpStatus.OK).json(category);
   } catch (error) {
-    console.error("Error creating category:", error);
+    // console.error("Error creating category:", error);
     return res.status(httpStatus.BAD_REQUEST).send(error.message);
   }
 };
@@ -99,14 +100,14 @@ const createCategory = async (req, res) => {
       if (!category) {
         return res.status(httpStatus.BAD_REQUEST).json({ error: 'Category not found' });
       }
-      
+        
       const uploadedFileName = req.file.filename;
       console.log(uploadedFileName);
       const imagePath = path.join("public/images/", uploadedFileName);
      await category.update({
         name: req.body.name,
         image: imagePath,
-        no_of_Category:req.body.no_of_Category,
+        // no_of_Category:req.body.no_of_Category,
       });
       await category.save();
 

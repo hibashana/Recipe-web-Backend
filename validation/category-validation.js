@@ -7,23 +7,23 @@ const Joi = require('joi');
 //     }),
 //   });
 
-  const create  = Joi.object().keys({
+  const create  = Joi.object({
     name: Joi.string().required(),
     image: Joi.string().required(),
 
   });
 
 
-  const getaCategory = Joi.object({
-    params: Joi.object({
-      id: Joi.string().required(),
-    }),
-  });
+    // const getaCategory = Joi.object({
+    //   params: Joi.object({
+    //     ctgyid: Joi.string().required(),
+    //   }),
+    // });
 
-  const updateCategory= Joi.object().keys({
+  const updateCategory= Joi.object({
     name: Joi.string(),
     image: Joi.string(),
         
       }).min(1);
 
-  module.exports={create,getaCategory,updateCategory};
+  module.exports={create,updateCategory};

@@ -32,9 +32,6 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.STRING,
       allowNull: false,
     },
-    no_of_recipes:{ 
-      type: DataTypes.INTEGER,
-    },
     
   }, {
     sequelize,
