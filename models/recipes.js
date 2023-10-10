@@ -21,6 +21,9 @@ module.exports = (sequelize, DataTypes) => {
       Recipes.hasMany(models.Steps, {
         foreignKey: 'RecipeID', // The fK in the Steps table
       });
+      Recipes.hasMany(models.App, {
+        foreignKey: 'RecipeID', // The fK in the Steps table
+      });
     }
   }
 

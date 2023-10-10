@@ -2,43 +2,43 @@
 const {
   Model
 } = require('sequelize');
+const Recipes = require('./recipes');
+const Category=require('./category')
 module.exports = (sequelize, DataTypes) => {
-  class Category extends Model {
+  class app extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Category.hasMany(models.Recipes, {
-        foreignKey: 'CategoryID', // The foreign key in the Recipes table
+      app.belongsTo(models.Recipes, {
+        foreignKey: 'RecipeID', // The foreign key in the Ingredients table
       });
-      Category.hasMany(models.App, {
-        foreignKey: 'CategoryID', // The foreign key in the Recipes table
+      app.belongsTo(models.Category, {
+        foreignKey: 'CategoryID', // The foreign key in the Ingredients table
       });
     }
   }
-  Category.init({
-    ctgyid: {
+  app.init({
+    id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
       autoIncrement: false,
     },
-    name: { 
-      type:DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+    name: DataTypes.STRING,
+    description: DataTypes.STRING,
+    RecipeID:{
+      type:DataTypes.UUID,
     },
-    image:{ 
-      type:DataTypes.STRING,
-      allowNull: false,
+    CategoryID:{
+      type:DataTypes.UUID,
     },
-    
   }, {
     sequelize,
-    modelName: 'Category',
+    modelName: 'app',
   });
-  return Category;
+  return app;
 };
