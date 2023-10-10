@@ -4,6 +4,7 @@ const httpStatus = require("http-status");
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
+const pick=require('../utils/pick');
 
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -42,19 +43,26 @@ const createUser = asyncHandler(async (req, res) => {
     });
   
 
-  const getAllUser = asyncHandler(async (req, res) => {
-    try {
-      const users = await Ruser.findAll({
-        where: {
-          type: 'user',
-        },
-      });
-      res.status(200).json(users);
-    } catch (error) {
-      console.error(error);
-      return res.status(httpStatus.BAD_REQUEST).send("An error occurred while fetching users");
-    }
-  });
+  // const getAllUser = asyncHandler(async (req, res) => {
+  //   try {
+  //     const users = await Ruser.findAll({
+  //       where: {
+  //         type: 'user',
+  //       },
+  //     });
+  //     res.status(200).json(users);
+  //   } catch (error) {
+  //     console.error(error);
+  //     return res.status(httpStatus.BAD_REQUEST).send("An error occurred while fetching users");
+  //   }
+  // });
+
+  const getAllUser = async (req, res) => {
+    const filter = pick(req.query, ['name', 'type']);
+    const options = pick(req.query, ['sortBy', 'limit', 'page']);
+    const result = await Ruser.findAndCountAll({ where: filter, ...options });
+    res.send(result);
+  };
 
   const getaUser = asyncHandler(async (req, res) => {
   try {
