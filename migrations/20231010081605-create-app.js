@@ -16,11 +16,12 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
-      RecipeID:{
-        type:Sequelize.UUID,
+      packageName: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
-      CategoryID:{
-        type:Sequelize.UUID,
+      image: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

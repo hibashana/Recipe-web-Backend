@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.STRING,
       allowNull: false,
     },
+    appID:{
+      type:DataTypes.UUID,
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'banner',

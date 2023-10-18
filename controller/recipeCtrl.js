@@ -21,17 +21,17 @@ const httpStatus = require("http-status");
           if (!recipes) {
             const uploadedFileName = req.file.filename;
             console.log(`uploadedFileName=${uploadedFileName}`);
-            const imagePath = path.join("public/images/", uploadedFileName);
+            const imagePath = path.join("/images/recipes/", uploadedFileName);
             
             req.body.image=imagePath;
             recipes = await Recipes.create(req.body
               );
-              res.status(httpStatus.OK).send(`Recipe ${recipes.name} created successfully.`);
+              res.status(httpStatus.OK).send(recipes);
           } else {
             return res.status(httpStatus.BAD_REQUEST).send("Recipe exist");
             
           }
-          return res.status(200).json(recipes);
+        //  return res.status(200).json(recipes);
         } catch (error) {
           console.error(error);
           return res.status(httpStatus.BAD_REQUEST).send(error.message);

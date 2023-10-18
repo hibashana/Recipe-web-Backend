@@ -13,9 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       Category.hasMany(models.Recipes, {
         foreignKey: 'CategoryID', // The foreign key in the Recipes table
       });
-      Category.hasMany(models.App, {
-        foreignKey: 'CategoryID', // The foreign key in the Recipes table
-      });
+      // Category.hasMany(models.App, {
+      //   foreignKey: 'CategoryID', // The foreign key in the Recipes table
+      // });
     }
   }
   Category.init({
@@ -31,11 +31,14 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true,
     },
-    image:{ 
-      type:DataTypes.STRING,
+    // image:{ 
+    //   type:DataTypes.STRING,
+    //   allowNull: false,
+    // },
+    appID:{
+      type:DataTypes.UUID,
       allowNull: false,
     },
-    
   }, {
     sequelize,
     modelName: 'Category',

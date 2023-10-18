@@ -9,7 +9,7 @@ const Joi = require('joi');
 
   const create  = Joi.object({
     name: Joi.string().required(),
-    image: Joi.string().required(),
+    appID: Joi.string().required(),
 
   });
 
@@ -22,7 +22,7 @@ const Joi = require('joi');
 
   const updateCategory= Joi.object({
     name: Joi.string(),
-    image: Joi.string(),
+    appID: Joi.string(),
         
       }).min(1);
 

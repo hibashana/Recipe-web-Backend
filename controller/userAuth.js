@@ -17,7 +17,7 @@ const createUser = asyncHandler(async (req, res) => {
         }
       const hashedPassword = await bcrypt.hash(password, 10);
       const ruser = await Ruser.create({ name,email,contact,username,password:hashedPassword,type,isactive });
-      res.status(httpStatus.OK).send(`User ${ruser.username} created successfully.`);
+      res.status(httpStatus.OK).send(ruser);
     });
 
 

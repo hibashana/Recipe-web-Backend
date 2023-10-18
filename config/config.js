@@ -2,14 +2,14 @@
 require("dotenv").config();
 module.exports = {
   env:process.env.NODE_ENV||"development",
-  port:process.env.PORT,
+  port:process.env.PORT||3000,
   development: {
-    username: "postgres",
-    password: "admin",
-    database: "recipesapp_db",
-    host: "localhost",
-    dialect: "postgres",
-    port:5432,
+    username: process.env.DB_USER,//"postgres",
+    password: process.env.DB_PASSWORD,//"admin",
+    database: process.env.DB_NAME,//"recipesapp_db",
+    host: process.env.DB_HOST,//"localhost",
+    dialect: process.env.DB_DIALECT,//"postgres",
+    port:process.env.DB_PORT,
     operatorsAliases: 0,
   },
 

@@ -15,8 +15,11 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      image: {
-        type: Sequelize.STRING
+      // image: {
+      //   type: Sequelize.STRING
+      // },
+      appID:{
+        type:Sequelize.UUID,
       },
       createdAt: {
         allowNull: false,
