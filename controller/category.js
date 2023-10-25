@@ -1,8 +1,9 @@
-const { Category, Recipes } = require("../models");
+const { Category, Recipes, Steps, Ingredients } = require("../models");
 const { Op } = require("sequelize");
 const path = require("path");
 const asyncHandler = require("express-async-handler");
 const httpStatus = require("http-status");
+const pick = require("../utils/pick");
 const validate = require("../middleware/validation");
 const categoryvalidation = require("../validation/category-validation");
 
@@ -161,7 +162,7 @@ const searchCategory = asyncHandler(async (req, res) => {
 
 // For Mobile App
 
-const   getAcategoryWithRecipe = asyncHandler(async (req, res) => {
+const getAcategoryWithRecipe = asyncHandler(async (req, res) => {
   try {
     const categoryId = req.params.id;
     const category = await Category.findByPk(categoryId, {
@@ -181,12 +182,92 @@ const getAllByApp = asyncHandler(async (req, res) => {
       where: {
         appID: appId,
       },
-      include:[{ model: Recipes }]
+      include: [
+        {
+          model: Recipes,
+          limit: 10,
+          include: [{ model: Ingredients }, { model: Steps }],
+        },
+      ],
     });
+
     res.status(httpStatus.OK).json(category);
   } catch (error) {
     console.error(error);
     return res.status(httpStatus.BAD_REQUEST).send(error.message);
+  }
+});
+
+const getAllByFilter = asyncHandler(async (req, res) => {
+  const filter = pick(req.query, ["name", "appID"]);
+  const options = pick(req.query, ["sortBy", "limit", "page", "count"]);
+
+  try {
+    const propertyFilters = {};
+
+    // Iterate over the property names and add filters if they exist in 'filter'
+    const propertyNamesToFilter = ["name"];
+    propertyNamesToFilter.forEach((propertyName) => {
+      if (filter[propertyName]) {
+        propertyFilters[propertyName] = {
+          [Op.iLike]: `%${filter[propertyName]}%`,
+        };
+      }
+    });
+
+    if (filter.appID) {
+      propertyFilters.appID = {
+        [Op.eq]: filter.appID,
+      };
+    }
+
+    options.page = options.page ? parseInt(options.page) : 1;
+    options.limit = options.limit ? parseInt(options.limit) : 10;
+
+    //const recipes =
+    await Category.findAll({
+      where: propertyFilters,
+      include: [
+        {
+          model: Recipes,
+          limit: 10,
+          include: [{ model: Ingredients }, { model: Steps }],
+        },
+      ],
+      order: options.sortBy
+        ? options.sortBy == "createdAt"
+          ? [[options.sortBy, "DESC"]]
+          : [[options.sortBy, "ASC"]]
+        : undefined,
+      limit: parseInt(options.limit),
+      offset: options.page
+        ? (parseInt(options.page) - 1) * parseInt(options.limit)
+        : undefined,
+    })
+      .then(async (recipes) => {
+        const totalCount = await Category.count({ where: propertyFilters });
+        const totalPages = Math.ceil(totalCount / options.limit);
+        const hasNext = options.page < totalPages;
+        return res.status(httpStatus.OK).json({
+          status: httpStatus.OK,
+          message: httpStatus["200_NAME"],
+          data: recipes,
+          page: options.page,
+          limit: options.limit,
+          totalPages: totalPages,
+          totalCount: totalCount,
+          hasNext: hasNext,
+        });
+      })
+      .catch((error) => {
+        return res
+          .status(httpStatus.BAD_REQUEST)
+          .send({ error: error.message });
+      });
+  } catch (error) {
+    return res
+      .status(httpStatus.INTERNAL_SERVER_ERROR)
+      .send({ error: error.message });
   }
 });
 module.exports = {
@@ -198,4 +279,5 @@ module.exports = {
   searchCategory,
   getAcategoryWithRecipe,
   getAllByApp,
+  getAllByFilter,
 };

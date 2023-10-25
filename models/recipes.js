@@ -14,7 +14,12 @@ module.exports = (sequelize, DataTypes) => {
       // Recipes.belongsTo(models.Category, {
       //   foreignKey: "ctgyid",  
       // });
-      
+      Recipes.belongsToMany(models.Banner, {
+        through: 'BannerRecipes',
+        foreignKey: 'recipeId',
+        as: 'Banners',
+      });
+
       Recipes.hasMany(models.Ingredients, {
         foreignKey: 'RecipeID', // The fK in the Ingredients table
       });
@@ -50,12 +55,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     premium: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      defaultValue: true,
     },
     CategoryID:{
       type:DataTypes.UUID,
+      allowNull: false,
     },
-    
+    appID:{
+      type:DataTypes.UUID,
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'Recipes',

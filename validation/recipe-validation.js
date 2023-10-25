@@ -4,6 +4,7 @@ const createRecipe= Joi.object().keys({
   name: Joi.string().required(),
   description: Joi.string().empty(''),
   CategoryID:Joi.string().required(),
+  appID:Joi.string().required(),
   image: Joi.string().required(),
 
 });
@@ -17,7 +18,7 @@ const createRecipe= Joi.object().keys({
 
   const updateRecipe= Joi.object().keys({
     name: Joi.string(),
-    description: Joi.string().empty(''),
+    description: Joi.string(),
     // CategoryID:Joi.string().required(),
     image: Joi.string(),
     premium:Joi.string(),

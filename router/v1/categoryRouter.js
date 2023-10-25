@@ -8,6 +8,7 @@ const {
   searchCategory,
   getAcategoryWithRecipe,
   getAllByApp,
+  getAllByFilter,
 } = require("../../controller/category");
 const { upload } = require("../../controller/uploadCtrl");
 const { authMiddleware, isAdmin } = require("../../middleware/authMiddleware");
@@ -55,6 +56,7 @@ router.get("/getall", getallcategory);
 // For Mobile App
 router.get("/with_Recipes/:id",getAcategoryWithRecipe);
 router.get("/all_by_app/:id",getAllByApp);
+router.get("/all_by_filter", getAllByFilter);
 
 router.get("/:id", getaCategory);
 

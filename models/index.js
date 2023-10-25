@@ -13,6 +13,7 @@ const models = {
   Steps:require('./steps')(sequelize,Sequelize.DataTypes),
   Banner:require('./banner')(sequelize,Sequelize.DataTypes),
   App:require('./app')(sequelize,Sequelize.DataTypes),
+  BannerRecipe:require('./banner_recipes')(sequelize,Sequelize.DataTypes),
  // token: require('./token')(sequelize, Sequelize.DataTypes),
 };
 

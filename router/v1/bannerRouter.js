@@ -6,6 +6,9 @@ const {
   deleteBanner,
   updateBanner,
   getAllByApp,
+  getAllByFilter,
+  createBannerRecipe,
+  deleteBannerRecipe,
 } = require("../../controller/bannerCtrl");
 const { authMiddleware, isAdmin } = require("../../middleware/authMiddleware");
 const { uploadBanner } = require("../../controller/uploadCtrl");
@@ -38,8 +41,14 @@ router.post(
   createBanner
 );
 
+//For recipes By banner
+router.post("/create_banner_recipe",authMiddleware, isAdmin,createBannerRecipe);
+router.delete("/delete_banner_recipe/:id",authMiddleware, isAdmin,deleteBannerRecipe);
+
+
 router.get("/getall", getallBanner);
 router.get("/all_by_app/:id", getAllByApp);
+router.get("/all_by_filter", getAllByFilter);
 router.get("/:id", getaBanner);
 
 router.delete("/:id", authMiddleware, isAdmin, deleteBanner);

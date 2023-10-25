@@ -29,6 +29,9 @@ module.exports = {
       CategoryID:{
         type:Sequelize.UUID,
       },
+      appID:{
+        type:Sequelize.UUID,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
