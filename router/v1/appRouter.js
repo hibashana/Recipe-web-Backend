@@ -4,7 +4,8 @@ const {
   getaApp,
   getallApp,
   deleteApp,
-  updateApp,getAppHomeData,
+  updateApp,
+  getAppHomeData,
 } = require("../../controller/appCtrl");
 const { authMiddleware, isAdmin } = require("../../middleware/authMiddleware");
 const { uploadApp } = require("../../controller/uploadCtrl");
@@ -23,8 +24,7 @@ router.post(
     const formData = {
       name: req.body.name,
       image: req.file ? req.file.filename : "", // Convert the buffer to base64
-      packageName:req.body.packageName,
-     
+      packageName: req.body.packageName,
     };
 
     const { error } = appValidation.createApp.validate(formData);
@@ -39,7 +39,7 @@ router.post(
 );
 
 router.get("/all", getallApp);
-router.get("/AppHomeData/:id",getAppHomeData)
+router.get("/AppHomeData/:id", getAppHomeData);
 router.get("/:id", getaApp);
 
 router.delete("/:id", authMiddleware, isAdmin, deleteApp);
@@ -49,19 +49,23 @@ router.put(
   authMiddleware,
   isAdmin,
   uploadApp.single("image"),
+
   (req, res, next) => {
     // Validate the form data
     const formData = {
       name: req.body.name,
-      image: req.file ? req.file.filename : "", // Convert the buffer to base64
-      packageName:req.body.packageName,
+      packageName: req.body.packageName,
     };
 
     const { error } = appValidation.updateApp.validate(formData);
 
     if (error) {
       // Handle validation errors
-      return res.status(400).json({ error: error.details[0].message });
+      const errorMessage = error.details
+        .map((details) => details.message)
+        .join(", ");
+
+      return res.status(400).json({ error: errorMessage });
     }
     next();
   },

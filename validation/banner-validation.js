@@ -14,8 +14,7 @@ const Joi = require('joi');
 //   });
 
   const updateBanner= Joi.object().keys({
-    name: Joi.string(),
-    image: Joi.string(),
+    name: Joi.string().required(),
     appID: Joi.string().required(),  
       });
 

@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const {packageName}=require("./custom-validation")
 
   const createApp  = Joi.object().keys({
     name: Joi.string().required(),
@@ -10,9 +11,9 @@ const Joi = require('joi');
 
 
   const updateApp= Joi.object().keys({
-    name: Joi.string(),
-    image: Joi.string(),
-    packageName: Joi.string().required(),  
+    name: Joi.string().required(),
+    //image: Joi.string(),
+    packageName: Joi.string().custom(packageName),  
       });
 
   module.exports={createApp,updateApp};

@@ -62,7 +62,8 @@ router.put(
     // Validate the form data
     const formData = {
       name: req.body.name,
-      image: req.file ? req.file.filename : "", // Convert the buffer to base64
+      
+      appID: req.body.appID,
     };
 
     const { error } = bannerValidation.updateBanner.validate(formData);

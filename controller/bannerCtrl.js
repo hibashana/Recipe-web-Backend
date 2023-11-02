@@ -70,9 +70,9 @@ const updateBanner = asyncHandler(async (req, res) => {
         .status(httpStatus.BAD_REQUEST)
         .json({ error: "Banner not found" });
     }
-    const uploadedFileName = req.file.filename;
+    const uploadedFileName =req.file? req.file.filename:banner.image;
     console.log(uploadedFileName);
-    const imagePath = path.join("public/images/", uploadedFileName);
+    const imagePath =req.file? path.join("/images/banner/", uploadedFileName):banner.image;
     await banner.update({
       name: req.body.name,
       image: imagePath,

@@ -102,15 +102,16 @@ const updateCategory = asyncHandler(async (req, res) => {
         .json({ error: "Category not found" });
     }
 
-    const uploadedFileName = req.file.filename;
-    console.log(uploadedFileName);
-    const imagePath = path.join("public/images/", uploadedFileName);
-    await category.update({
-      name: req.body.name,
-      image: imagePath,
-      app: req.body.appID,
-      // no_of_Category:req.body.no_of_Category,
-    });
+    // const uploadedFileName = req.file.filename;
+    // console.log(uploadedFileName);
+    // const imagePath = path.join("public/images/", uploadedFileName);
+    // await category.update({
+    //   name: req.body.name,
+    //   image: imagePath,
+    //   app: req.body.appID,
+    //   // no_of_Category:req.body.no_of_Category,
+    // });
+    await category.update(req.body);
     await category.save();
 
     res.status(httpStatus.OK).json(category);
@@ -222,7 +223,7 @@ const getAllByFilter = asyncHandler(async (req, res) => {
     }
 
     options.page = options.page ? parseInt(options.page) : 1;
-    options.limit = options.limit ? parseInt(options.limit) : 10;
+    options.limit = options.limit ? parseInt(options.limit) : 5;
 
     //const recipes =
     await Category.findAll({

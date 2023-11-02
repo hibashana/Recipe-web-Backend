@@ -9,7 +9,12 @@ const password = (value) => {
     }
     return value;
   };
-
+  const packageName = (value) => {
+    if (!value.match(/^([a-z]+\.)+[a-z]+$/)) {
+      throw new Error('Invalid package name format');
+    }
+    return value;
+  };
   // const objectId = (value) => {
   //   if (!value.match(/^[0-9a-fA-F]{24}$/)) {
   //       throw new Error('"{{#label}}" must be a valid  id');
@@ -20,4 +25,4 @@ const password = (value) => {
 
 
 
-  module.exports = {password};
+  module.exports = {password,packageName};

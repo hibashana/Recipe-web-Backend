@@ -86,9 +86,11 @@ const updateApp = asyncHandler(async (req, res) => {
         .status(httpStatus.BAD_REQUEST)
         .json({ error: "app not found" });
     }
-    const uploadedFileName = req.file.filename;
+    const uploadedFileName = req.file ? req.file.filename : app.imagePath;
     console.log(uploadedFileName);
-    const imagePath = path.join("/images/", uploadedFileName);
+    const imagePath = req.file
+      ? path.join("/images/appImage/", uploadedFileName)
+      : app.imagePath;
     await app.update({
       name: req.body.name,
       image: imagePath,
