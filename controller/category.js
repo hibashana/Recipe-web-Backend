@@ -223,7 +223,7 @@ const getAllByFilter = asyncHandler(async (req, res) => {
     }
 
     options.page = options.page ? parseInt(options.page) : 1;
-    options.limit = options.limit ? parseInt(options.limit) : 5;
+    options.limit = options.limit ? parseInt(options.limit) : 10;
 
     //const recipes =
     await Category.findAll({
@@ -232,6 +232,7 @@ const getAllByFilter = asyncHandler(async (req, res) => {
         {
           model: Recipes,
           limit: 10,
+          order:[["premium"]],
           include: [{ model: Ingredients }, { model: Steps }],
         },
       ],

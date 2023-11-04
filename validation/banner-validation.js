@@ -15,7 +15,7 @@ const Joi = require('joi');
 
   const updateBanner= Joi.object().keys({
     name: Joi.string().required(),
-    appID: Joi.string().required(),  
+    appID: Joi.string(),  
       });
 
   module.exports={createBanner,updateBanner};
