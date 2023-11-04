@@ -61,7 +61,7 @@ router.put(
     // Validate the form data
     const formData = {
       name: req.body.name,
-      image: req.file ? req.file.filename : "", // Convert the buffer to base64
+      //image: req.file ? req.file.filename : "", // Convert the buffer to base64
       //   CategoryID:req.body.CategoryID
     };
 

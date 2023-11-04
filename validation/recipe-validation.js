@@ -20,7 +20,7 @@ const createRecipe= Joi.object().keys({
     name: Joi.string(),
     description: Joi.string(),
     // CategoryID:Joi.string().required(),
-    image: Joi.string(),
+    //image: Joi.string(),
     premium:Joi.string(),
   
   });

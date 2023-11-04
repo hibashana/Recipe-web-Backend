@@ -92,9 +92,11 @@ const updateRecipe = asyncHandler(async (req, res) => {
         .status(httpStatus.BAD_REQUEST)
         .json({ error: "Recipe not found" });
     }
-    const uploadedFileName = req.file.filename;
+    const uploadedFileName = req.file ? req.file.filename : recipe.image;
     console.log(uploadedFileName);
-    const imagePath = path.join("public/images/", uploadedFileName);
+    const imagePath = req.file
+      ? path.join("/images/recipes/", uploadedFileName)
+      : recipe.image;
     await recipe.update({
       name: req.body.name,
       image: imagePath,
