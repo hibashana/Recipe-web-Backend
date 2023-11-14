@@ -1,7 +1,7 @@
 
 
 const password = (value) => {
-    if (value.length < 4) {
+    if (value.length < 8) {
       throw new Error('password must be at least 8 characters');
     }
     if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {

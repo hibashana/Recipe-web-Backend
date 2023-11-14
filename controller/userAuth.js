@@ -207,7 +207,7 @@ const updateisActive = asyncHandler(async (req, res) => {
     }
 
     // Update the 'isactive' field from 'true' to 'false'
-    user.isactive = false;
+    user.isactive = !user.isactive;
     await user.save();
 
     res.status(200).json({ message: "Default value changed successfully" });

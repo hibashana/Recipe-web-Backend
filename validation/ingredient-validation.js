@@ -14,7 +14,7 @@ const createIngredients= Joi.object().keys({
 
   const updateIngredients= Joi.object().keys({
     name_qnty: Joi.string().required(),
-    RecipeID: Joi.string().required(),
+    // RecipeID: Joi.string().required(),
     
   
   });

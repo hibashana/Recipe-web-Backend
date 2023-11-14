@@ -1,20 +1,21 @@
 const Sequelize = require('sequelize');
-const { development } = require('../config/config');
+const { env, development, production } = require('../config/config');
 
-const sequelize = new Sequelize(development.database, development.username, development.password, development);
+
+const sequelize = env === "production" ? new Sequelize(production.database, production.username, production.password, production) : new Sequelize(development.database, development.username, development.password, development);
 
 const models = {
   sequelize,
   Sequelize,
   Ruser: require('./ruser')(sequelize, Sequelize.DataTypes),
-  Category:require('./category')(sequelize,Sequelize.DataTypes),
-  Recipes:require('./recipes')(sequelize,Sequelize.DataTypes),
-  Ingredients:require('./intredients')(sequelize,Sequelize.DataTypes),
-  Steps:require('./steps')(sequelize,Sequelize.DataTypes),
-  Banner:require('./banner')(sequelize,Sequelize.DataTypes),
-  App:require('./app')(sequelize,Sequelize.DataTypes),
-  BannerRecipe:require('./banner_recipes')(sequelize,Sequelize.DataTypes),
- // token: require('./token')(sequelize, Sequelize.DataTypes),
+  Category: require('./category')(sequelize, Sequelize.DataTypes),
+  Recipes: require('./recipes')(sequelize, Sequelize.DataTypes),
+  Ingredients: require('./intredients')(sequelize, Sequelize.DataTypes),
+  Steps: require('./steps')(sequelize, Sequelize.DataTypes),
+  Banner: require('./banner')(sequelize, Sequelize.DataTypes),
+  App: require('./app')(sequelize, Sequelize.DataTypes),
+  BannerRecipe: require('./banner_recipes')(sequelize, Sequelize.DataTypes),
+  // token: require('./token')(sequelize, Sequelize.DataTypes),
 };
 
 Object.keys(models).forEach((modelName) => {
