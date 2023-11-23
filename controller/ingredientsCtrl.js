@@ -115,7 +115,7 @@ const createIngredients = asyncHandler(async (req, res) => {
       // }
   
       options.page = options.page ? parseInt(options.page) : 1;
-      options.limit = options.limit ? parseInt(options.limit) : 3;
+      options.limit = options.limit ? parseInt(options.limit) : 10;
   
       //const recipes =
       await Ingredients.findAll({
