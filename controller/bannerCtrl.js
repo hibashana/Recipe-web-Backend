@@ -1,4 +1,4 @@
-const { Banner, BannerRecipe, Recipes } = require("../models");
+const { Banner, BannerRecipe, Recipes,Ingredients,Steps } = require("../models");
 const path = require("path");
 const asyncHandler = require("express-async-handler");
 const httpStatus = require("http-status");
@@ -167,6 +167,14 @@ const getAllByFilter = asyncHandler(async (req, res) => {
       //     include: [{ model: Ingredients }, { model: Steps }],
       //   },
       // ],
+      include: [{
+        model: Recipes,
+        through: {
+          model: BannerRecipe,
+        },
+        include: [{ model: Ingredients }, { model: Steps }],
+        as: 'Recipes',
+      }],
       order: options.sortBy
         ? options.sortBy == "createdAt"
           ? [[options.sortBy, "DESC"]]

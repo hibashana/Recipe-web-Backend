@@ -226,7 +226,15 @@ const getAllByFilter = asyncHandler(async (req, res) => {
     //const recipes =
     await Recipes.findAll({
       where: propertyFilters,
-      include: [{ model: Ingredients,order:[['createdAt','DESC']] }, { model: Steps }],
+      include: [{ model: Ingredients,order:[['createdAt','DESC']] }, { model: Steps },{
+        model: Banner,
+        through: {
+          model: BannerRecipe,
+        },
+
+        as: "Banners",
+      },],
+      
       order: options.sortBy
         ? options.sortBy == "createdAt"
           ? [[options.sortBy, "DESC"]]

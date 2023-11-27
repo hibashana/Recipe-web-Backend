@@ -84,7 +84,12 @@ const getaCategory = asyncHandler(async (req, res) => {
 
 const getallcategory = asyncHandler(async (req, res) => {
   try {
-    const category = await Category.findAll();
+    // const category = await Category.findAll();
+    const appId = req.params.id;
+    const category = await Category.findAll({
+      where: {
+        appID: appId,
+      }});
     res.status(httpStatus.OK).json(category);
   } catch (error) {
     console.error(error);
@@ -203,7 +208,7 @@ const getAllByFilter = asyncHandler(async (req, res) => {
   const filter = pick(req.query, ["name", "appID"]);
   const options = pick(req.query, ["sortBy", "limit", "page", "count"]);
 
-  try {
+  try { 
     const propertyFilters = {};
 
     // Iterate over the property names and add filters if they exist in 'filter'

@@ -51,8 +51,8 @@ router.post(
 );
 
 router.get("/search", searchCategory);
-
-router.get("/getall", getallcategory);
+// router.get("/getall", getallcategory);
+router.get("/getall/:id", getallcategory);
 // For Mobile App
 router.get("/with_Recipes/:id",getAcategoryWithRecipe);
 router.get("/all_by_app/:id",getAllByApp);
