@@ -20,6 +20,7 @@ const recipesRouter = require("./router/v1/recipesRouter");
 const bannerRouter = require("./router/v1/bannerRouter");
 const ingredientRouter = require("./router/v1/ingredientRouter");
 const stepsRouter = require("./router/v1/stepsRouter");
+const homeRouter = require("./router/v1/homeRouter");
 
 // enable cors
 app.use(cors());
@@ -35,6 +36,7 @@ app.use("/api/v1/recipes", recipesRouter);
 app.use("/api/v1/banner", bannerRouter);
 app.use("/api/v1/ingredients", ingredientRouter);
 app.use("/api/v1/steps", stepsRouter);
+app.use("/api/v1/home", homeRouter);
 app.get("*", (req, res) => {
   res.status(404).send("Sorry, the page you are looking for does not exist.");
 });
