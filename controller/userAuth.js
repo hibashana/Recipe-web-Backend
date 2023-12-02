@@ -49,6 +49,7 @@ const loginUser = asyncHandler(async (req, res) => {
   res.status(200).json({
     name: user.name,
     email: user.email,
+    // type:user.type,
     contact: user.contact,
     username: user.username,
     token: token,
@@ -185,6 +186,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
     res.status(200).json({
       name: admin.name,
       email: admin.email,
+      type:admin.type,
       contact: admin.contact,
       username: admin.username,
       token: token,
