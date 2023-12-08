@@ -1,4 +1,4 @@
-const { Category, Recipes, Steps, Ingredients } = require("../models");
+const { Category, Recipes, Steps, Ingredients, CategoryRecipes } = require("../models");
 const { Op } = require("sequelize");
 const path = require("path");
 const asyncHandler = require("express-async-handler");
@@ -233,14 +233,27 @@ const getAllByFilter = asyncHandler(async (req, res) => {
     //const recipes =
     await Category.findAll({
       where: propertyFilters,
-      include: [
-        {
-          model: Recipes,
-          limit: 10,
-          order:[["premium"]],
-          include: [{ model: Ingredients }, { model: Steps }],
+      // include: [
+      //   {
+      //     model: Recipes,
+      //     limit: 10,
+      //     through: {
+      //       model: CategoryRecipes,
+      //     },
+      //     order:[["premium"]],
+      //    // include: [{ model: Ingredients }, { model: Steps }],
+      //     as: 'Recipes',
+          
+      //   },
+      //],
+      include: [{
+        model: Recipes,
+        through: {
+          model: CategoryRecipes,
         },
-      ],
+        include: [{ model: Ingredients }, { model: Steps }],
+        as: 'Recipes',
+      }],
       order: options.sortBy
         ? options.sortBy == "createdAt"
           ? [[options.sortBy, "DESC"]]
@@ -277,6 +290,106 @@ const getAllByFilter = asyncHandler(async (req, res) => {
       .send({ error: error.message });
   }
 });
+const getRecipesByCategoryId = asyncHandler(async (req, res) => {
+  try {
+    const categoryID= req.query.CategoryID;
+    const filter = pick(req.query, ["CategoryID",]);
+  const options = pick(req.query, ["sortBy", "limit", "page", "count"]);
+  const propertyFilters = {};
+
+  if (filter.appID) {
+    propertyFilters.appID = {
+      [Op.eq]: filter.appID,
+    };
+  }
+
+  options.page = options.page ? parseInt(options.page) : 1;
+  options.limit = options.limit ? parseInt(options.limit) : 10;
+
+   const recipe=  await Category.findByPk(categoryID,{
+      where: propertyFilters,
+      include: [{
+        model: Recipes,
+        through: {
+          model: CategoryRecipes,
+        },
+        include: [{ model: Ingredients }, { model: Steps }],
+        as: 'Recipes',
+      }],
+      limit: parseInt(options.limit),
+      offset: options.page
+        ? (parseInt(options.page) - 1) * parseInt(options.limit)
+        : undefined,
+    })
+    // .then((recipe)=>{
+    //  return res.status(httpStatus.OK).json(recipe);
+    // }).error((e)=>{
+    //   return res.status(httpStatus.BAD_REQUEST).send(e.message);
+    // });
+    if (!recipe) {
+      return res
+        .status(httpStatus.BAD_REQUEST)
+        .json({ error: "Category not found" });
+    }
+    const totalCount = await Category.count({ where: propertyFilters });
+        const totalPages = Math.ceil(totalCount / options.limit);
+        const hasNext = options.page < totalPages;
+        return res.status(httpStatus.OK).json({
+          status: httpStatus.OK,
+          message: httpStatus["200_NAME"],
+          data: recipe,
+          page: options.page,
+          limit: options.limit,
+          totalPages: totalPages,
+          totalCount: totalCount,
+          hasNext: hasNext,
+        });
+    //res.status(httpStatus.OK).json(recipe.Recipes);
+    
+  } catch (error) {
+    console.error(error);
+    return res.status(httpStatus.BAD_REQUEST).send(error.message);
+  }
+});
+
+// For recipes By Category
+const createCategoryRecipe = asyncHandler(async (req, res) => {
+  const categoryId = req.body.categoryId;
+  const recipeId = req.body.recipeId;
+
+  // Create a new record in the BannerRecipes model to associate a banner with a recipe
+  await CategoryRecipes.create({
+    categoryId: categoryId,
+    recipeId: recipeId,
+  })
+    .then((categoryRecipe) => {
+      return res.status(httpStatus.OK).json(categoryRecipe);
+      //console.log("Banner-Recipe association created:", bannerRecipe);
+    })
+    .catch((error) => {
+      return res
+        .status(httpStatus.BAD_REQUEST)
+        .send({ message: error.message });
+
+      // console.error("Error creating Banner-Recipe association:", error);
+    });
+});
+const deleteCategoryRecipe = asyncHandler(async (req, res) => {
+  try {
+    const categoryRecipeId = req.params.id;
+    const categoryRecipe = await CategoryRecipes.findByPk(categoryRecipeId);
+    if (!categoryRecipe) {
+      return res
+        .status(httpStatus.BAD_REQUEST)
+        .json({ error: "Banner not found" });
+    }
+    await categoryRecipe.destroy();
+    res.status(httpStatus.OK).json({ message: "deleted Successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(httpStatus.BAD_REQUEST).send(error.message);
+  }
+});
 module.exports = {
   createCategory,
   getaCategory,
@@ -287,4 +400,7 @@ module.exports = {
   getAcategoryWithRecipe,
   getAllByApp,
   getAllByFilter,
+  createCategoryRecipe,
+  deleteCategoryRecipe,
+  getRecipesByCategoryId
 };

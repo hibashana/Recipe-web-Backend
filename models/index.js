@@ -7,7 +7,7 @@ const sequelize = env === "production" ? new Sequelize(production.database, prod
 const models = {
   sequelize,
   Sequelize,
-  Ruser: require('./ruser')(sequelize, Sequelize.DataTypes),
+  Users: require('./user')(sequelize, Sequelize.DataTypes),
   Category: require('./category')(sequelize, Sequelize.DataTypes),
   Recipes: require('./recipes')(sequelize, Sequelize.DataTypes),
   Ingredients: require('./intredients')(sequelize, Sequelize.DataTypes),
@@ -15,6 +15,7 @@ const models = {
   Banner: require('./banner')(sequelize, Sequelize.DataTypes),
   App: require('./app')(sequelize, Sequelize.DataTypes),
   BannerRecipe: require('./banner_recipes')(sequelize, Sequelize.DataTypes),
+  CategoryRecipes: require('./category_recipes')(sequelize, Sequelize.DataTypes),
   // token: require('./token')(sequelize, Sequelize.DataTypes),
 };
 

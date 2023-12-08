@@ -26,7 +26,7 @@ router.post(
     const formData = {
       name: req.body.name,
       image: req.file ? req.file.filename : "", // Convert the buffer to base64
-      CategoryID: req.body.CategoryID,
+     // CategoryID: req.body.CategoryID,
       appID: req.body.appID,
     };
 
@@ -46,7 +46,6 @@ router.get("/searchrecipe", searchRecipe);
 router.get("/getall", getallRecipes);
 
 //For Mobile App
-router.get("/all_by_category_id", getallRecipesByCategoryId);
 router.get("/all_by_filter", getAllByFilter);
 
 router.get("/change_premium_status", authMiddleware, isAdmin, premiumStatus);

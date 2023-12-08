@@ -9,6 +9,9 @@ const {
   getAcategoryWithRecipe,
   getAllByApp,
   getAllByFilter,
+  createCategoryRecipe,
+  deleteCategoryRecipe,
+  getRecipesByCategoryId,
 } = require("../../controller/category");
 const { upload } = require("../../controller/uploadCtrl");
 const { authMiddleware, isAdmin } = require("../../middleware/authMiddleware");
@@ -18,35 +21,11 @@ const httpStatus = require("http-status");
 
 const router = express.Router();
 
-// router.post(
-//   "/addcategory",
-//   authMiddleware,
-//   isAdmin,
-//   upload.single("image"),
-//   (req, res, next) => {
-//     // Validate the form data
-//     const formData = {
-//       name: req.body.name,
-//       image: req.file ? req.file.filename : "", // Convert the buffer to base64
-//     };
-
-//     const { error } = categoryvalidation.create.validate(formData);
-
-//     if (error) {
-//       // Handle validation errors
-//       return res
-//         .status(httpStatus.BAD_REQUEST)
-//         .json({ error: error.details[0].message });
-//     }
-//     next();
-//   },
-//   createCategory
-// );
 router.post(
   "/addcategory",
   authMiddleware,
   isAdmin,
- validate(categoryvalidation.create),
+  validate(categoryvalidation.create),
   createCategory
 );
 
@@ -54,43 +33,29 @@ router.get("/search", searchCategory);
 // router.get("/getall", getallcategory);
 router.get("/getall/:id", getallcategory);
 // For Mobile App
-router.get("/with_Recipes/:id",getAcategoryWithRecipe);
-router.get("/all_by_app/:id",getAllByApp);
+router.get("/with_Recipes/:id", getAcategoryWithRecipe);
+router.get("/all_by_app/:id", getAllByApp);
+router.get("/all_by_category_id", getRecipesByCategoryId);
 router.get("/all_by_filter", getAllByFilter);
 
 router.get("/:id", getaCategory);
 
 router.delete("/:id", authMiddleware, isAdmin, deletecategry);
 
-// router.put(
-//   "/updatecategory/:id",
-//   authMiddleware,
-//   isAdmin,
-//   upload.single("image"),
-//   (req, res, next) => {
-//     // Validate the form data
-//     const formData = {
-//       name: req.body.name,
-//       image: req.file ? req.file.filename : "", // Convert the buffer to base64
-//     };
-//     // const { error} = categoryvalidation.updateCategory.validate(req);
+//For recipes By category
+router.post(
+  "/create_category_recipe",
+  authMiddleware,
+  isAdmin,
+  createCategoryRecipe
+);
+router.delete(
+  "/delete_category_recipe/:id",
+  authMiddleware,
+  isAdmin,
+  deleteCategoryRecipe
+);
 
-//     // if (error) {
-//     //   return res.status(400).json({ error: 'UserID is required' });
-//     // }
-
-//     const { error } = categoryvalidation.updateCategory.validate(formData);
-
-//     if (error) {
-//       // Handle validation errors
-//       return res
-//         .status(httpStatus.BAD_REQUEST)
-//         .json({ error: error.details[0].message });
-//     }
-//     next();
-//   },
-//   updateCategory
-// );
 router.put(
   "/updatecategory/:id",
   authMiddleware,

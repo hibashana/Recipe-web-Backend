@@ -26,9 +26,7 @@ module.exports = {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
       },
-      CategoryID:{
-        type:Sequelize.UUID,
-      },
+      
       appID:{
         type:Sequelize.UUID,
       },

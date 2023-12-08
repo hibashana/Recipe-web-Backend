@@ -1,4 +1,4 @@
-const { Ruser } = require("../models");
+const {  Users } = require("../models");
 
 const httpStatus = require("http-status");
 const bcrypt = require("bcrypt");
@@ -11,12 +11,12 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 const createUser = asyncHandler(async (req, res) => {
   const { name, email, contact, username, password, type, isactive } = req.body;
-  const existinguser = await Ruser.findOne({ where: { username } });
+  const existinguser = await Users.findOne({ where: { username } });
   if (existinguser) {
     return res.status(httpStatus.BAD_REQUEST).send("Username already exists");
   }
   const hashedPassword = await bcrypt.hash(password, 10);
-  const ruser = await Ruser.create({
+  const ruser = await Users.create({
     name,
     email,
     contact,
@@ -30,7 +30,7 @@ const createUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
-  const user = await Ruser.findOne({ where: { username } });
+  const user = await Users.findOne({ where: { username } });
 
   if (!user) {
     return res.status(httpStatus.BAD_REQUEST).send("Incorrect username");
@@ -42,7 +42,7 @@ const loginUser = asyncHandler(async (req, res) => {
     return res.status(httpStatus.BAD_REQUEST).send("Incorrect password");
   }
 
-  const token = jwt.sign({ userId: user.ruserid }, JWT_SECRET, {
+  const token = jwt.sign({ id: user.id }, JWT_SECRET, {
     expiresIn: "24h",
   });
 
@@ -73,14 +73,14 @@ const loginUser = asyncHandler(async (req, res) => {
 const getAllUser = async (req, res) => {
   const filter = pick(req.query, ["name", "type"]);
   const options = pick(req.query, ["sortBy", "limit", "page"]);
-  const result = await Ruser.findAndCountAll({ where: filter, ...options });
+  const result = await Users.findAndCountAll({ where: filter, ...options });
   res.send(result);
 };
 
 const getaUser = asyncHandler(async (req, res) => {
   try {
     const userId = req.params.id;
-    const user = await Ruser.findByPk(userId);
+    const user = await Users.findByPk(userId);
     if (!user) {
       return res.status(httpStatus.BAD_REQUEST).send("User not found");
     }
@@ -96,7 +96,7 @@ const getaUser = asyncHandler(async (req, res) => {
 const deleteUser = asyncHandler(async (req, res) => {
   try {
     const userId = req.params.id;
-    const user = await Ruser.findByPk(userId);
+    const user = await Users.findByPk(userId);
     if (!user) {
       return res.status(httpStatus.BAD_REQUEST).send("User not found");
     }
@@ -116,7 +116,7 @@ const updateUserDetails = asyncHandler(async (req, res) => {
         .status(httpStatus.BAD_REQUEST)
         .json({ error: "ID is required" });
     }
-    const user = await Ruser.findByPk(userId);
+    const user = await Users.findByPk(userId);
     if (!user) {
       return res.status(httpStatus.BAD_REQUEST).send("User not found");
     }
@@ -136,7 +136,7 @@ const updatePassword = asyncHandler(async (req, res) => {
   const { ruserid } = req.user;
   const { password } = req.body;
   console.log(ruserid);
-  const user = await Ruser.findOne({ where: { ruserid: ruserid } });
+  const user = await Users.findOne({ where: { ruserid: ruserid } });
   if (!user) {
     return res.status(httpStatus.BAD_REQUEST).send("User not found");
   }
@@ -158,7 +158,7 @@ const updatePassword = asyncHandler(async (req, res) => {
 const loginAdmin = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
   try {
-    const admin = await Ruser.findOne({ where: { username } });
+    const admin = await Users.findOne({ where: { username } });
 
     if (!admin) {
       return res
@@ -179,7 +179,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
         .status(httpStatus.UNAUTHORIZED)
         .json({ error: httpStatus["401_NAME"] });
     }
-    const token = jwt.sign({ userId: admin.ruserid }, JWT_SECRET, {
+    const token = jwt.sign({ id: admin.id }, JWT_SECRET, {
       expiresIn: "1d",
     });
 
@@ -202,7 +202,7 @@ const updateisActive = asyncHandler(async (req, res) => {
   try {
     const userId = req.params.id;
     console.log(userId);
-    const user = await Ruser.findByPk(userId);
+    const user = await Users.findByPk(userId);
     if (!user) {
       // console.log(error);
       return res.status(httpStatus.BAD_REQUEST).send("User not found");
@@ -262,7 +262,7 @@ const getAllByFilter = asyncHandler(async (req, res) => {
     options.limit = options.limit ? parseInt(options.limit) : 10;
 
     //const recipes =
-    await Ruser.findAll({
+    await Users.findAll({
       where: propertyFilters,
 
       order: options.sortBy
@@ -276,7 +276,7 @@ const getAllByFilter = asyncHandler(async (req, res) => {
         : undefined,
     })
       .then(async (data) => {
-        const totalCount = await Ruser.count({ where: propertyFilters });
+        const totalCount = await Users.count({ where: propertyFilters });
         const totalPages = Math.ceil(totalCount / options.limit);
         const hasNext = options.page < totalPages;
         return res.status(httpStatus.OK).json({

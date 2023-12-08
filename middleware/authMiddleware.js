@@ -1,4 +1,4 @@
-const { Ruser } = require("../models");
+const {  Users } = require("../models");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 
@@ -14,12 +14,17 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
       if (token) {
         const decoded = jwt.verify(token, JWT_SECRET);
         //console.log(`decide=${decoded.userId}`);
-        const id = decoded?.userId;
-        const user = await Ruser.findByPk(id);
+        const id = decoded?.id;
+        const user = await Users.findByPk(id);
         //console.log(`user1=${user}`);
-        req.user = user;
-        next();
-        console.log(decoded);
+        if(user){
+          req.user = user;
+          next();
+          console.log(decoded);
+        }else{
+          throw new Error("user not found");
+        }
+        
       }
     } catch (error) {
       console.log(error);
@@ -33,7 +38,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
 
 const isAdmin = asyncHandler(async (req, res, next) => {
   const { email } = req.user;
-  const adminUser = await Ruser.findOne({ where: { email: email } });
+  const adminUser = await Users.findOne({ where: { email: email } });
   if (adminUser.type !== "admin") {
     throw new Error("You are not admin");
   } else {

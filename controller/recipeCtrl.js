@@ -1,4 +1,12 @@
-const { Recipes, Ingredients, Steps,Banner,BannerRecipe } = require("../models");
+const {
+  Recipes,
+  Ingredients,
+  Steps,
+  Banner,
+  BannerRecipe,
+  Category,
+  CategoryRecipes,
+} = require("../models");
 const asyncHandler = require("express-async-handler");
 const path = require("path");
 const pick = require("../utils/pick");
@@ -45,20 +53,7 @@ const getallRecipes = asyncHandler(async (req, res) => {
     return res.status(httpStatus.BAD_REQUEST).send(error.message);
   }
 });
-const getallRecipesByCategoryId = asyncHandler(async (req, res) => {
-  try {
-    const recipe = await Recipes.findAll({
-      where: {
-        CategoryID: req.query.CategoryID,
-      },
-      include: [{ model: Ingredients }, { model: Steps }],
-    });
-    res.status(httpStatus.OK).json(recipe);
-  } catch (error) {
-    console.error(error);
-    return res.status(httpStatus.BAD_REQUEST).send(error.message);
-  }
-});
+
 
 const getaRecipe = asyncHandler(async (req, res) => {
   try {
@@ -226,15 +221,27 @@ const getAllByFilter = asyncHandler(async (req, res) => {
     //const recipes =
     await Recipes.findAll({
       where: propertyFilters,
-      include: [{ model: Ingredients,order:[['createdAt','DESC']] }, { model: Steps },{
-        model: Banner,
-        through: {
-          model: BannerRecipe,
-        },
+      include: [
+        { model: Ingredients, order: [["createdAt", "DESC"]] },
+        { model: Steps },
+        {
+          model: Banner,
+          through: {
+            model: BannerRecipe,
+          },
 
-        as: "Banners",
-      },],
-      
+          as: "Banners",
+        },
+        {
+          model: Category,
+          through: {
+            model: CategoryRecipes,
+          },
+
+          as: "Categories",
+        },
+      ],
+
       order: options.sortBy
         ? options.sortBy == "createdAt"
           ? [[options.sortBy, "DESC"]]
@@ -279,7 +286,7 @@ module.exports = {
   updateRecipe,
   getaRecipe,
   searchRecipe,
-  getallRecipesByCategoryId,
+  
   getAllByFilter,
   premiumStatus,
 };

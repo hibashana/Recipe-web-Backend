@@ -3,7 +3,7 @@ const Joi = require('joi');
 const createRecipe= Joi.object().keys({
   name: Joi.string().required(),
   description: Joi.string().empty(''),
-  CategoryID:Joi.string().required(),
+  //CategoryID:Joi.string().required(),
   appID:Joi.string().required(),
   image: Joi.string().required(),
 

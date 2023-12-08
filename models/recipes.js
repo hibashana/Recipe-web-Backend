@@ -19,6 +19,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'recipeId',
         as: 'Banners',
       });
+      Recipes.belongsToMany(models.Category, {
+        through: 'CategoryRecipes',
+        foreignKey: 'recipeId',
+        as: 'Categories',
+      });
 
       Recipes.hasMany(models.Ingredients, {
         foreignKey: 'RecipeID', // The fK in the Ingredients table
@@ -57,10 +62,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
-    CategoryID:{
-      type:DataTypes.UUID,
-      allowNull: false,
-    },
+    
     appID:{
       type:DataTypes.UUID,
       allowNull: false,
