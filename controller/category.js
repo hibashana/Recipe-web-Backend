@@ -381,7 +381,7 @@ const deleteCategoryRecipe = asyncHandler(async (req, res) => {
     if (!categoryRecipe) {
       return res
         .status(httpStatus.BAD_REQUEST)
-        .json({ error: "Banner not found" });
+        .json({ error: "Category not found" });
     }
     await categoryRecipe.destroy();
     res.status(httpStatus.OK).json({ message: "deleted Successfully" });
